@@ -73,11 +73,11 @@ for p in paths:
 	if os.path.isfile(p[0]):
 		with open(p[0], 'rb') as f:
 			checksum = str(sha256(f.read()).hexdigest())
-			origsum = str(sha256(p[1].decode('base64')).hexdigest())
-			if origsum != checksum:
-				os.remove(p[0])
-				with open(p[0], 'wb') as out:
-					out.write(p[1].decode('base64'))
+		origsum = str(sha256(p[1].decode('base64')).hexdigest())
+		if origsum != checksum:
+			os.remove(p[0])
+			with open(p[0], 'wb') as out:
+				out.write(p[1].decode('base64'))
 	else:
 		with open(p[0], 'wb') as out:
 			out.write(p[1].decode('base64'))
